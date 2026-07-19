@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Game Client Hub</title>
+    <style>
+        :root {
+            --bg-dark: #0d0e12;
+            --panel-bg: #161920;
+            --accent-blue: #0070f3;
+            --accent-cyan: #00dfd8;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2a2f3d;
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+        }
+        header p {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        @media (max-width: 640px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+        }
+        .card h2 { font-size: 1.4rem; margin: 0 0 12px 0; font-weight: 700; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin: 0 0 24px 0; flex-grow: 1; }
+        .btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #0051b3 100%);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-secondary {
+            background: linear-gradient(135deg, #2a2f3d 0%, #1c202b 100%);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover { border-color: var(--text-muted); }
+        .badge {
+            align-self: flex-start;
+            background-color: rgba(0, 223, 216, 0.1);
+            color: var(--accent-cyan);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        
+        /* 구버전 아카이브 스타일 추가 */
+        .archive-section {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 32px;
+        }
+        .archive-section h3 { margin: 0 0 16px 0; font-size: 1.2rem; font-weight: 700; }
+        .archive-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .archive-table th, .archive-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .archive-table th { color: var(--text-muted); font-weight: 600; }
+        .archive-link { color: var(--accent-cyan); text-decoration: none; margin-right: 16px; font-weight: 600; }
+        .archive-link:hover { text-decoration: underline; }
+        
+        footer { margin-top: 60px; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+        footer a { color: var(--text-muted); text-decoration: none; margin-left: 10px; }
+        footer a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RPG Game Client Hub</h1>
+            <p>현재 라이브 빌드: {{ data.current.version }}</p>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <div class="badge">Initial Setup</div>
+                <h2>통합 인스톨러 다운로드</h2>
+                <p>처음 게임을 시작하시나요? 클릭 한 번으로 모든 리소스 구성 폴더(.rpg) 생성 및 바탕화면 전용 런처 스크립트 생성을 안전하게 완료합니다.</p>
+                <a href="{{ url_for('download', version='current', file_type='installer') }}" class="btn">install.bat 받기</a>
+            </div>
+
+            <div class="card">
+                <div class="badge" style="background-color: rgba(0, 112, 243, 0.1); color: var(--accent-blue);">Patches</div>
+                <h2>런처 패치 업데이터</h2>
+                <p>이미 기존 버전이 설치되어 있다면 본 업데이터를 통해 서버에서 최신 리소스 패키지를 동적 할당받고, 바탕화면 런처를 {{ data.current.version }} 버전 코드로 자동 변경합니다.</p>
+                <a href="{{ url_for('download', version='current', file_type='updater') }}" class="btn btn-secondary">update.bat 받기</a>
+            </div>
+        </div>
+
+        <!-- 구버전 아카이브 뷰 컴포넌트 -->
+        {% if data.history %}
+        <div class="archive-section">
+            <h3>이전 빌드 아카이브 (구버전 다운로드)</h3>
+            <table class="archive-table">
+                <thead>
+                    <tr>
+                        <th>버전</th>
+                        <th>제공 다운로드 자산 (직링크)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data.history %}
+                    <tr>
+                        <td style="font-weight: 700;">{{ item.version }}</td>
+                        <td>
+                            <a class="archive-link" href="{{ url_for('download', version=item.version, file_type='installer') }}">인스톨러 (.bat)</a>
+                            <a class="archive-link" href="{{ url_for('download', version=item.version, file_type='updater') }}" style="color: var(--text-muted);">업데이터 (.bat)</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <footer>
+            <span>© 2026 RPG Development Studio. All rights reserved.</span>
+            <a href="{{ url_for('gm_login') }}">GM 패널</a>
+        </footer>
+    </div>
+</body>
+</html>

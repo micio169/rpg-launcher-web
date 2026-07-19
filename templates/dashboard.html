@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>GM Deployment Control Tower</title>
+    <style>
+        body { background-color: #0d0e12; color: #f3f4f6; font-family: system-ui, sans-serif; margin: 0; padding: 40px; }
+        .wrapper { max-width: 700px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;}
+        h1 { margin: 0; font-size: 1.8rem; font-weight: 700;}
+        .logout { color: #9ca3af; text-decoration: none; font-size: 0.9rem;}
+        .logout:hover { color: #ff4a4a; }
+        .panel { background: #161920; border: 1px solid #2a2f3d; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 24px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #f3f4f6; font-size: 0.95rem;}
+        .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 4px; display: block;}
+        input {
+            width: 100%; padding: 12px; background-color: #0d0e12; border: 1px solid #2a2f3d;
+            border-radius: 6px; color: white; box-sizing: border-box; font-family: monospace;
+        }
+        input:focus { border-color: #00dfd8; outline: none; }
+        .btn-submit {
+            background: linear-gradient(135deg, #00dfd8 0%, #00a39e 100%);
+            color: #0d0e12; border: none; padding: 14px 24px; font-weight: 700; border-radius: 6px; cursor: pointer; font-size: 1rem;
+        }
+        .history-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border-bottom: 1px solid #2a2f3d; font-size: 0.9rem;
+        }
+        .btn-del { background: none; border: none; color: #ff4a4a; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>GM 배포 컨트롤 타워</h1>
+            <a href="{{ url_for('gm_logout') }}" class="logout">로그아웃</a>
+        </div>
+        
+        <!-- 신규 릴리즈 섹션 -->
+        <div class="panel">
+            <h2 style="margin-top:0; font-size:1.3rem; color: #00dfd8;">🚀 신규 라이브 빌드 배포</h2>
+            <form action="{{ url_for('gm_deploy') }}" method="POST">
+                <input type="hidden" name="action" value="release_new">
+                <div class="form-group">
+                    <label>1. 통합 인스톨러용 Google Drive ZIP 파일 ID</label>
+                    <input type="text" name="installer_id" value="{{ data.current.installer_id }}" required>
+                </div>
+                <div class="form-group">
+                    <label>2. 최신 업데이터용 Google Drive ZIP 파일 ID</label>
+                    <input type="text" name="update_id" value="{{ data.current.update_id }}" required>
+                </div>
+                <div class="form-group">
+                    <label>3. 타겟 배포 버전 코드 (이름)</label>
+                    <input type="text" name="current_version" value="{{ data.current.version }}" required>
+                    <span class="hint">새 버전을 입력하면 기존 최신 버전은 구버전 아카이브로 자동 보관됩니다.</span>
+                </div>
+                <div class="form-group">
+                    <label>4. 런처 구동용 코어 HTML 파일명</label>
+                    <input type="text" name="new_html" value="{{ data.current.new_html }}" required>
+                </div>
+                <button type="submit" class="btn-submit">새 빌드 배포 및 기존 빌드 보관</button>
+            </form>
+        </div>
+
+        <!-- 구버전 히스토리 관리 섹션 -->
+        <div class="panel">
+            <h2 style="margin-top:0; font-size:1.3rem; color: #9ca3af;">📦 보관된 구버전 리스트</h2>
+            {% if data.history %}
+                {% for item in data.history %}
+                <div class="history-item">
+                    <span><strong>{{ item.version }}</strong> (인스톨러 ID: {{ item.installer_id[:10] }}...)</span>
+                    <form action="{{ url_for('gm_deploy') }}" method="POST" style="margin:0;">
+                        <input type="hidden" name="action" value="delete_history">
+                        <input type="hidden" name="target_version" value="{{ item.version }}">
+                        <button type="submit" class="btn-del">삭제</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#9ca3af; font-size:0.9rem; margin:0;">보관된 이전 빌드가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
