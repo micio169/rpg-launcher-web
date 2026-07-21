@@ -64,8 +64,13 @@ This project is deployed using **Render**.
 
 ## 🔗LINK
 
-Click here!
-[WEBSITE LINK](https://rpg-client-hub.onrender.com/)
+Below is the link to the website.
+
+https://rpg-client-hub.onrender.com/
+
+Copy this link and use it in your web browser.
+
+**[⚠️Warning] Never navigate to the website via GitHub.**
 
 ---
 
