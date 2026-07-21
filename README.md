@@ -3,7 +3,7 @@
 ![Status](https://img.shields.io/badge/status-online-success)
 ![Hosting](https://img.shields.io/badge/hosting-Render-46E3B7)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-[![GO WEBSITE](https://img.shields.io/badge/GO-WEBSITE-4CAF50?style=for-the-badge)](https://rpg-client-hub.onrender.com/)
+[GO WEBSITE](https://rpg-client-hub.onrender.com/)
 
 RPG 게임의 설치 파일과 런처를 다운로드할 수 있는 웹 기반 다운로드 센터입니다.
 
